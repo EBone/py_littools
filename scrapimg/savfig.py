@@ -8,7 +8,7 @@ def savimg(url,fname):
     print url
     try:
         request=urllib2.urlopen(url)
-        with open(os.path.join(r'D:\ooxx0609',fname),'wb') as g:
+        with open(os.path.join(r'/home/pi/e/ooxx0609',fname),'wb') as g:
             g.write(request.read())
             request.close()
     except urllib2.HTTPError,e:

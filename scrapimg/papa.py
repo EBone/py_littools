@@ -10,7 +10,7 @@ def getImagurl(url):
     data=sitecontent('img')
     print(data)
     for i in data:
-        imageurl=pq(i).attr('src')
+        imageurl=pq(pq(i).siblings('a')).attr('href')
         if isinstance(imageurl,str) and match.match(imageurl):
             urls.append(imageurl)
 
