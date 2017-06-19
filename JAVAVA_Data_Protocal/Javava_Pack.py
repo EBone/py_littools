@@ -1,8 +1,8 @@
 import struct
-from info import MessageNames,GameCommand,GameStatus,GameResult
-from base_protocal import Javava_Pack,wordpack
+from .info import MessageNames,GameCommand,GameStatus,GameResult
+from .base_protocal import Javava_Pack,wordpack
 
-class Task_onlog(Javava_Pack):
+class Task_Onlog(Javava_Pack):
     def __init__(self,version_number):
         super().__init__(version_number,MessageNames.Task_Onlog)
     def pack(self,log_content):
@@ -92,3 +92,4 @@ class Task_GamePic_UpLoad(Javava_Pack):
         if content_length < self.message_max_length:
             return b''.join([headerdata, wordpack(content_length), content_data])
         raise ValueError("picture data too big ")
+
