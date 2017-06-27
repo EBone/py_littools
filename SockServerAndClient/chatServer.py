@@ -69,16 +69,16 @@ class ChatServer:
 				if sock==self.server:
 					client,address=self.server.accept()
 					print("Chat server: got connection %d from %s"%(client.fileno(),address))
-					cname=recieve(client).split("Name:	")[1]
+					cname=recieve(client).split("Name: ")[1]
 					self.clients+=1
-					send(client,"CLient:	"+str(address[0]))
+					send(client,"CLient: "+str(address[0]))
 					inputs.append(client)
 					self.clientmap[client]=(address,cname)
 					msg="\n(Connected: New client (%d) from %s)"%(self.clients,self.get_client_name(client))
 					for output in self.outputs:
 						send(output,msg)
 					self.outputs.append(client)
-				if sock==sys.stdin:
+				elif sock==sys.stdin:
 					junk=sys.stdin.readline()
 					running=False
 				else:
@@ -99,8 +99,9 @@ class ChatServer:
 							for output in self.outputs:
 								send(output,msg)
 					except socket.error as e:
-							inputs.remove(sock)
-							self.outputs.remove(sock)
+						print(e)
+						inputs.remove(sock)
+						self.outputs.remove(sock)
 		self.server.close()
 
 
