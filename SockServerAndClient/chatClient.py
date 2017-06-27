@@ -10,6 +10,7 @@ class chatClient:
 	def __init__(self,name,port,host=Server_Host):
 		self.name=name
 		self.host=host
+		self.connected=False
 		self.port=int(port)
 		self.prompt='['+'@'.join([name,socket.gethostname().split('.')[0]])+']>'
 		try:
@@ -17,11 +18,12 @@ class chatClient:
 			self.sock.connect((self.host,self.port))
 			print("Now connected to chat server @port %d"%self.port)
 			self.connected=True
-			send(self.sock,"Name:	"+self.name)
+			send(self.sock,"Name: "+self.name)
 			data=recieve(self.sock)
-			addr=data.split('CLient:	')[1]
+			addr=data.split('CLient: ')[1]
 			self.prompt='['+'@'.join([self.name,addr])+']>'
 		except socket.error as e:
+			print(e)
 			print("Failed to connect to chat server @port %d"%self.port)
 			sys.exit(1)
 	def run(self):
@@ -35,7 +37,7 @@ class chatClient:
 						data=sys.stdin.readline().strip()
 						if data:
 							send(self.sock,data)
-					if sock==self.sock:
+					elif sock==self.sock:
 						data=recieve(self.sock)
 						if not data:
 							print("client shutting down")
@@ -53,6 +55,3 @@ if __name__=="__main__":
 
 
 
-				
-			
-			
