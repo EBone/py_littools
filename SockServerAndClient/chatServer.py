@@ -42,6 +42,7 @@ class ChatServer:
 		print("server listten to port %d"%port)
 		self.server.listen(backlog)
 		signal.signal(signal.SIGINT,self.sighandler)
+
 	def sighandler(self,signum,frame):
 		print("shutting down the server")
 		for output in self.outputs:
@@ -52,6 +53,7 @@ class ChatServer:
 		info=self.clientmap[client]
 		host,name=info[0][0],info[1]
 		return "@".join([name,host])
+
 	def run(self):
 		inputs=[self.server,sys.stdin]
 		self.outputs=[]
@@ -60,6 +62,7 @@ class ChatServer:
 			try:
 				readable,writable,exceptional=select.select(inputs,self.outputs,[])
 			except select.error as e:
+				print("fuck")
 				break
 			
 			for sock in readable:
