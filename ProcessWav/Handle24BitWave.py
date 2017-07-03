@@ -3,9 +3,9 @@ import struct
 import audioop
 
 class Handle_24bit_Data:
-    def __init__(self, bytes_data, handle_method):
+    def __init__(self, bytes_data, handler):
         self.bytes_data = bytes_data
-        self.handle_method = handle_method
+        self.handler = handler
 
     def handle_str_data(self):
         return audioop.byteswap(self.bytes_data,3)
@@ -24,7 +24,7 @@ class Handle_24bit_Data:
         str_data = ''.join([hex(data_tp[0]), low_pos])
         hex_value = int(str_data, base=16)
         maxvalue=2<<23
-        comvalue=2<<22-1
+        comvalue=(2<<22)-1
         if hex_value<=comvalue:
             return hex_value
         else:
@@ -53,7 +53,7 @@ class Handle_24bit_Data:
         data=self.handle_str_data()
         data_generator = self.iter_bytes_data(data)
         int24_datalist = list(map(self.make_int24_value, data_generator))  # get int value list
-        handled_data = map(self.handle_method, int24_datalist)              # handle int data
+        handled_data = self.handler( int24_datalist).handle()           # handle int data
         swaped_data=map(self.swap_number,handled_data)
         hex_tuple_list = list(map(self.split_int24, swaped_data))  # split to 8bit and 16bit
         int24_bitdata = map(self.pack_data, hex_tuple_list)
@@ -62,22 +62,24 @@ class Handle_24bit_Data:
 
 
 if __name__ == "__main__":
-    def halflower(data):
-        return int(data)
 
+    import wave
+    from  WavHandler import Handler_FadeOut,Handler_Test,Handler_FadeIN
+    wavfile=wave.open("ttt.wav",'r')
+    wav_len=wavfile.getnframes()
+    process_len=int(wav_len/2)*3
+    str_data=wavfile.readframes(wav_len)
+    handled_data=Handle_24bit_Data(str_data[:process_len],Handler_FadeIN)()
+    wav_file_w=wave.open("t3t.wav",'wb')
+    wav_file_w.setnchannels(1)
+    wav_file_w.setsampwidth(3)
+    wav_file_w.setframerate(48000)
+    wav_file_w.writeframesraw(handled_data)
+    wav_file_w.writeframesraw(str_data[process_len:])
 
-    datalike = b'\xb9\x0f\x00'
-
-    print(list(Handle_24bit_Data(datalike, halflower)()))
 
 
 # print(list(hex24_bit_datalist))
 # print(list(handled_data))
 # print(list(hex24_tuple_list))
 # print(list(hex24_bit_data))
-
-
-
-
-
-
