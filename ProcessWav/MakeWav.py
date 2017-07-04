@@ -67,8 +67,6 @@ class MakeWave_FadeIn(MakeWave):
         header_data_h=self.handler(header_data,Handler_FadeIN)()
         return header_data_h,tail_data
 
-
-
 class MakeWave_CrossFade:
     def __init__(self,left_wav,right_wav,cross_len):
         #left_wav fadeout
@@ -99,9 +97,6 @@ class MakeWave_CrossFade:
         w_wav_file.writeframesraw(data[1])
         w_wav_file.writeframesraw(data[2])
         w_wav_file.close()
-
-
-
 
 
 if __name__=="__main__":

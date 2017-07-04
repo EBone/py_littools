@@ -13,15 +13,20 @@ class Handle_16bit_Data:
         datalist = list(struct.unpack('<'+data_len_str+'h', self.bytes_data))
         return datalist
 
+    def get_numricdata(self):
+        return self.iter_bytes_data()
+
+    def get_numricdata_handled(self):
+        handled_data = self.handler(self.get_numricdata()).handle()
+        return handled_data
+
     def pack_data(self, tp):
         tp_len_str=str(len(tp))
         return struct.pack('<'+tp_len_str+'h', *tp)
 
     def __call__(self):
 
-        data_tp = self.iter_bytes_data()
-        print(data_tp)
-        handled_data = self.handler( data_tp).handle()        # handle int data
+        handled_data = self.get_numricdata_handled()        # handle int data
         return self.pack_data(handled_data)
 
 

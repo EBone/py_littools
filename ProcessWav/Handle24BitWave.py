@@ -30,6 +30,19 @@ class Handle_24bit_Data:
         else:
             return hex_value-maxvalue
 
+    def get_numricdata(self):
+        data = self.handle_str_data()
+        data_generator = self.iter_bytes_data(data)
+        int24_datalist = list(map(self.make_int24_value, data_generator))
+        return int24_datalist
+
+    def get_numricdata_handled(self):
+        data = self.handle_str_data()
+        data_generator = self.iter_bytes_data(data)
+        int24_datalist = list(map(self.make_int24_value, data_generator))
+        handled_data = self.handler(int24_datalist).handle()
+        return handled_data
+
     def swap_number(self,hexnumber):
         #to change signed value to unsigned
         if hexnumber>=0:
@@ -50,10 +63,7 @@ class Handle_24bit_Data:
         return struct.pack('>BH', *tp)
 
     def __call__(self):
-        data=self.handle_str_data()
-        data_generator = self.iter_bytes_data(data)
-        int24_datalist = list(map(self.make_int24_value, data_generator))  # get int value list
-        handled_data = self.handler( int24_datalist).handle()           # handle int data
+        handled_data = self.get_numricdata_handled()           # handle int data
         swaped_data=map(self.swap_number,handled_data)
         hex_tuple_list = list(map(self.split_int24, swaped_data))  # split to 8bit and 16bit
         int24_bitdata = map(self.pack_data, hex_tuple_list)
