@@ -4,8 +4,6 @@ from .Handle24BitWave import Handle_24bit_Data
 from .WavHandler import Handler_FadeIN,Handler_FadeOut,Handler_CrossFade
 from .PlotWav import draw_wav
 
-
-
 class MakeWave:
     def __init__(self,r_path,p_header,p_tail):
         self.r_wav_file = wave.open(r_path, 'rb')
@@ -86,15 +84,16 @@ class MakeWave_CrossFade:
         self.left_wav=left_wav
         self.right_wav=right_wav
         self.cross_len=cross_len
+        self.wav_fout = MakeWave_FadeOut(self.left_wav, self.cross_len)
+        self.wav_fin=MakeWave_FadeIn(self.right_wav,self.cross_len)
+        self.params=self.wav_fout.params[:3]
+        self.data_tp=self.get_crossfade_data()
 
     def get_crossfade_data(self):
-        wav_fout=MakeWave_FadeOut(self.left_wav,self.cross_len)
-        params=wav_fout.params[:3]
-        wav_fin=MakeWave_FadeIn(self.right_wav,self.cross_len)
-        left_body,left_tail=wav_fout.handle_wav()
-        right_header,right_body=wav_fin.handle_wav()
-        data_combin=wav_fout.handler(b''.join([left_tail,right_header]),Handler_CrossFade)()
-        return left_body,data_combin,right_body,params
+        left_body,left_tail=self.wav_fout.handle_wav()
+        right_header,right_body=self.wav_fin.handle_wav()
+        data_combin=self.wav_fout.handler(b''.join([left_tail,right_header]),Handler_CrossFade)()
+        return left_body,data_combin,right_body
 
     def set_params(self,wav_file,nchannel,sampwidth,framerate):
         wav_file.setnchannels(nchannel)
@@ -103,13 +102,21 @@ class MakeWave_CrossFade:
 
     def write_frames(self,w_path):
         w_wav_file = wave.open(w_path, 'wb')
-        data = self.get_crossfade_data()
-        self.set_params(w_wav_file,*data[3])
-        w_wav_file.writeframesraw(data[0])
-        w_wav_file.writeframesraw(data[1])
-        w_wav_file.writeframesraw(data[2])
+        self.set_params(w_wav_file,*self.params)
+        w_wav_file.writeframesraw(self.data_tp[0])
+        w_wav_file.writeframesraw(self.data_tp[1])
+        w_wav_file.writeframesraw(self.data_tp[2])
         w_wav_file.close()
 
+    def draw_wav_Origin(self):
+        self.wav_fout.draw_wav_handled()
+        self.wav_fin.draw_wav_handled()
+
+
+    def draw_wav_handled(self):
+        data_str=b''.join(self.data_tp)
+        data_num=self.wav_fout.handler(data_str,Handler_FadeOut).get_numricdata()
+        draw_wav(data_num)
 
 if __name__=="__main__":
 
