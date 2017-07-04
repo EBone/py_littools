@@ -2,6 +2,7 @@ import wave
 from .Handle16BitWave import Handle_16bit_Data
 from .Handle24BitWave import Handle_24bit_Data
 from .WavHandler import Handler_FadeIN,Handler_FadeOut,Handler_CrossFade
+from .PlotWav import draw_wav
 
 
 
@@ -37,35 +38,46 @@ class MakeWave:
 
     def get_framelen(self):
         return self.params[3]
+
     def handle_wav(self):
         raise NotImplementedError
 
     def write_frames(self,w_path):
-        w_wav_file = open(w_path, 'wb')
+        w_wav_file = wave.open(w_path, 'wb')
         w_wav_file.setparams(self.params)
         data = self.handle_wav()
         w_wav_file.writeframesraw(data[0])
         w_wav_file.writeframesraw(data[1])
         w_wav_file.close()
 
+    def draw_wav_Origin(self):
+        data_num=self.handler_instance.get_numricdata()
+        draw_wav(data_num)
+
+    def draw_wav_handled(self):
+        data_num=self.handler_instance.get_numricdata_handled()
+        draw_wav(data_num)
+
 
 
 class MakeWave_FadeOut(MakeWave):
     def __init__(self,r_path,p_tail):
         super().__init__(r_path,0,p_tail)
+        self.data_header,self.data_tail=self.get_frames()
+        self.handler_instance=self.handler(self.data_tail,Handler_FadeOut)
     def handle_wav(self):
-        header_data,tail_data=self.get_frames()
-        tail_data_h=self.handler(tail_data,Handler_FadeOut)()
-        return header_data,tail_data_h
-
+        tail_data_h=self.handler_instance()
+        return self.data_header,tail_data_h
 
 class MakeWave_FadeIn(MakeWave):
     def __init__(self,r_path,p_header):
         super().__init__(r_path,p_header,0)
+        self.data_header, self.data_tail = self.get_frames()
+        self.handler_instance = self.handler(self.data_header, Handler_FadeIN)
     def handle_wav(self):
-        header_data,tail_data=self.get_frames()
-        header_data_h=self.handler(header_data,Handler_FadeIN)()
-        return header_data_h,tail_data
+        header_data_h=self.handler_instance()
+        return header_data_h,self.data_tail
+
 
 class MakeWave_CrossFade:
     def __init__(self,left_wav,right_wav,cross_len):
@@ -103,7 +115,8 @@ if __name__=="__main__":
 
     #MakeWave_FadeIn("ttt.wav",48000*4).write_frames("tnt.wav",)
     #MakeWave_FadeOut("ttt.wav", 48000 * 4).write_frames("tnt2.wav")
-    MakeWave_CrossFade("ttt.wav","ttt.wav",48000*6).write_frames("tcf.wav")
+    #MakeWave_CrossFade("ttt.wav","ttt.wav",48000*6).write_frames("tcf.wav")
+    MakeWave_FadeOut("ttt.wav",48000*4).draw_wav_Origin()
 
 
 
