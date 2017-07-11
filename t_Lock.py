@@ -18,7 +18,7 @@ class L_R(Thread):
         self.lock=lock
     def run(self):
         self.lock.release()
-        time.sleep(1)
+        time.sleep(0.01)
         self.lock.release()
 
 if __name__=="__main__":

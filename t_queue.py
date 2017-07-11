@@ -6,7 +6,7 @@ class Procuder(Thread):
     def __init__(self,queue):
         Thread.__init__(self)
         self.queue=queue
-        self.i=100
+        self.i=50
     def run(self):
         while self.i>0:
             value=random.randint(0,10)
@@ -26,7 +26,7 @@ class Consumer(Thread):
     def run(self):
         while True:
             value=self.queue.get()
-            #time.sleep(0.5)
+            time.sleep(0.005)
             print("%d get "%value)
             #print("unfinished %d"%self.queue.unfinished_tasks)
             self.queue.task_done()
