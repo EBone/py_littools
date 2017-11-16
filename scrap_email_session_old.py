@@ -7,11 +7,10 @@ class Collect_Email:
         self.response=None
         self.url=url
         self.namelist=[]
-        self.num=0
         self.session=requests.session()
 
     def login(self):
-        payload={'username':'admin','password':'m_idi2audiO_603','redirect':'./ucp.php?mode=login','sid':'e1135853d7a5bf0a7817e17d6e153aed','login':'Login'}
+        payload={'username':'admin','password':'m_idi2audiO_603','redirect':'./ucp.php?mode=login','sid':'7badcbe3d8df44a66ce44dc8d30380c8','login':'Login'}
         self.session.post('http://forums.threebodytech.com/ucp.php?mode=login',data=payload)
 
     #还是先登陆吧
@@ -35,8 +34,6 @@ class Collect_Email:
             if name_addr not in self.namelist:
                 self.namelist.append(name_addr)
 
-
-
     #全部email_address
     def get_email_address(self):
         mailist=[]
@@ -50,64 +47,32 @@ class Collect_Email:
                 item[1]=doc[tnum+1:]
             else:
                 print("fuck")
-                print("will wait 30 seconds")
-                time.sleep(30)
-                print("retry............")
-                self.get_url_content(item[1])
-                doc = pq(self.response)(".column1 dl dd a").attr("href")
-                print(doc)
-                if doc:
-                    tnum = doc.find(":")
-                    item[1] = doc[tnum + 1:]
-
+                print(self.response)
         print(self.namelist)
 
     #下一页地址(可优)
-    # def get_next_pages(self):
-    #     doc=pq(self.response)(".next").siblings()
-    #     page_list=[]
-    #     temp=[]
-    #     for i in doc.items():
-    #         temp_addr=i("a").attr("href")
-    #         if temp_addr:
-    #             temp.append(self.rooturl+temp_addr)
-    #     for addr in temp:
-    #         if addr not in page_list:
-    #             page_list.append(addr)
-    #     print(len(page_list))
-    #     return page_list
     def get_next_pages(self):
-        self.num+=1
-        doc=pq(self.response)(".next")
+        doc=pq(self.response)(".next").siblings()
         page_list=[]
         temp=[]
-        if doc:
-            for i in doc.items():
-                temp_addr=i("a").attr("href")
-                if temp_addr:
-                    temp.append(self.rooturl+temp_addr)
-            for addr in temp:
-                if addr not in page_list:
-                    page_list.append(addr)
-            print(page_list[0])
-            return page_list[0]
-        else:
-            print(self.num)
-            print("my be last page")
+        for i in doc.items():
+            temp_addr=i("a").attr("href")
+            if temp_addr:
+                temp.append(self.rooturl+temp_addr)
+        for addr in temp:
+            if addr not in page_list:
+                page_list.append(addr)
+        print(len(page_list))
+        return page_list
 
     #此处调用
     def get_all(self):
         self.login()
         self.get_url_content(self.url)
         self.get_user_content()
-        while 1:
-            time.sleep(1)
-            self.url=self.get_next_pages()
-            if self.url:
-                self.get_url_content(self.url)
-                self.get_user_content()
-            else:
-                break
+        for url in self.get_next_pages():
+            self.get_url_content(url)
+            self.get_user_content()
         self.get_email_address()
         self.session.close()
 
@@ -134,8 +99,7 @@ if __name__=="__main__":
     url="http://forums.threebodytech.com/viewtopic.php?f=12&t=60"
     p=Collect_Email(url)
     p.get_all()
-
-    # #print("fuck\n"*10)
+    #print("fuck\n"*10)
     writemails(make_name_mail(p.namelist),"name_email_address_out.txt")
     writemails(make_mail(p.namelist), "email_address_out.txt")
 
@@ -144,4 +108,3 @@ if __name__=="__main__":
     p.get_all()
     writemails(make_name_mail(p.namelist),"name_email_address_in.txt")
     writemails(make_mail(p.namelist), "email_address_in.txt")
-
