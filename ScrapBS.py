@@ -200,15 +200,15 @@ if __name__=="__main__":
     # get_brands_items(Brandurl, 2)
 
     #SoundEffect/Items
-    SEurl="https://www.bestservice.com/sound_effects.html"
-    items_write(SEurl,"SoundEffect")
+    # SEurl="https://www.bestservice.com/sound_effects.html"
+    # items_write(SEurl,"SoundEffect")
     
     # Softwares/items
-    STurl="https://www.bestservice.com/software.html"
-    items_write(STurl, "Softwares")
+    # STurl="https://www.bestservice.com/software.html"
+    # items_write(STurl, "Softwares")
     # BooksandVideos/items
-    BVurl="https://www.bestservice.com/books_videos.html"
-    items_write(BVurl, "BookVideos")
+    # BVurl="https://www.bestservice.com/books_videos.html"
+    # items_write(BVurl, "BookVideos")
 
     # VirtualInstrument/table/items
     VTurl="https://www.bestservice.com/virtual_instruments.html"
