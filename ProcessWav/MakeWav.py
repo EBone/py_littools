@@ -1,8 +1,9 @@
 import wave
-from .Handle16BitWave import Handle_16bit_Data
-from .Handle24BitWave import Handle_24bit_Data
-from .WavHandler import Handler_FadeIN,Handler_FadeOut,Handler_CrossFade
-from .PlotWav import draw_wav
+import numpy as np
+from Handle16BitWave import Handle_16bit_Data
+from Handle24BitWave import Handle_24bit_Data
+from WavHandler import Handler_FadeIN,Handler_FadeOut,Handler_CrossFade
+from PlotWav import draw_wav
 
 class MakeWave:
     def __init__(self,r_path,p_header,p_tail):
@@ -118,17 +119,28 @@ class MakeWave_CrossFade:
         data_num=self.wav_fout.handler(data_str,Handler_FadeOut).get_numricdata()
         draw_wav(data_num)
 
+
+def make_sine_wave_16(freq,length,path,samplerate):
+    with wave.open(path,"wb") as sinfile:
+        sinfile.setnchannels(1)
+        sinfile.setframerate(samplerate)
+        sinfile.setsampwidth(2)
+        data=[np.sin(i*2*np.pi/(samplerate/freq)) for i in range(length*samplerate)]
+        npdata=np.array(data,dtype=np.float)
+        npdata=np.array([i*32767 for i in npdata],dtype=np.int16)
+
+        import matplotlib.pyplot as plt
+        x=[i for i in range(length*samplerate)]
+        plt.plot(x[:500],npdata[:500])
+        plt.show()
+        str_data=npdata.tostring()
+        sinfile.writeframes(str_data)
+
 if __name__=="__main__":
 
     #MakeWave_FadeIn("ttt.wav",48000*4).write_frames("tnt.wav",)
     #MakeWave_FadeOut("ttt.wav", 48000 * 4).write_frames("tnt2.wav")
     #MakeWave_CrossFade("ttt.wav","ttt.wav",48000*6).write_frames("tcf.wav")
-    MakeWave_FadeOut("ttt.wav",48000*4).draw_wav_Origin()
+    #MakeWave_FadeOut("ttt.wav",48000*4).draw_wav_Origin()
 
-
-
-
-
-
-
-
+    make_sine_wave_16(1000,2,"t.wav",48000)
