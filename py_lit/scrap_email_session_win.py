@@ -1,0 +1,155 @@
+import requests
+from pyquery import PyQuery as pq
+import time
+class Collect_Email:
+    def __init__(self,url):
+        self.rooturl="http://forums.threebodytech.com/"
+        self.response=None
+        self.url=url
+        self.namelist=[]
+        self.num=0
+        self.session=requests.session()
+        self.chongfucishu=''
+
+    def login(self):
+        payload={'username':'admin','password':'m_idi2audiO_603','redirect':'./ucp.php?mode=login','sid':'e1135853d7a5bf0a7817e17d6e153aed','login':'Login'}
+        self.session.post('http://forums.threebodytech.com/ucp.php?mode=login',data=payload)
+
+    #还是先登陆吧
+    def get_url_content(self,url):
+        r=self.session.get(url)
+        self.response=r.content.decode('utf-8')
+
+    #每页的用户网址
+    def get_user_content(self):
+        doc=pq(self.response)('strong .username')
+        for i in doc.items():
+            taddr=i.attr('href')
+            #print(taddr)
+            if "&sid" in taddr:
+                tnum=taddr.find("&sid")
+                addr=taddr[:tnum]
+            else:
+                addr=taddr
+            #print(addr)
+            name_addr=[i.text(),self.rooturl+addr]
+            if name_addr in self.namelist:
+                self.chongfucishu=self.chongfucishu+str(len(self.namelist)+1)+"    "
+            self.namelist.append(name_addr)
+
+
+
+    #全部email_address
+    def get_email_address(self):
+        mailist=[]
+        for item in self.namelist:
+            time.sleep(1)
+            self.get_url_content(item[1])
+            doc=pq(self.response)(".column1 dl dd a").attr("href")
+            print(doc)
+            if doc:
+                tnum=doc.find(":")
+                item[1]=doc[tnum+1:]
+            else:
+                print("fuck")
+                print("will wait 30 seconds")
+                time.sleep(30)
+                print("retry............")
+                self.get_url_content(item[1])
+                doc = pq(self.response)(".column1 dl dd a").attr("href")
+                print(doc)
+                if doc:
+                    tnum = doc.find(":")
+                    item[1] = doc[tnum + 1:]
+
+        print(self.namelist)
+
+    #下一页地址(可优)
+    # def get_next_pages(self):
+    #     doc=pq(self.response)(".next").siblings()
+    #     page_list=[]
+    #     temp=[]
+    #     for i in doc.items():
+    #         temp_addr=i("a").attr("href")
+    #         if temp_addr:
+    #             temp.append(self.rooturl+temp_addr)
+    #     for addr in temp:
+    #         if addr not in page_list:
+    #             page_list.append(addr)
+    #     print(len(page_list))
+    #     return page_list
+    def get_next_pages(self):
+        self.num+=1
+        doc=pq(self.response)(".next")
+        page_list=[]
+        temp=[]
+        if doc:
+            for i in doc.items():
+                temp_addr=i("a").attr("href")
+                if temp_addr:
+                    temp.append(self.rooturl+temp_addr)
+            for addr in temp:
+                if addr not in page_list:
+                    page_list.append(addr)
+            print(page_list[0])
+            return page_list[0]
+        else:
+            print(self.num)
+            print("my be last page")
+
+    #此处调用
+    def get_all(self):
+        self.login()
+        self.get_url_content(self.url)
+        self.get_user_content()
+        while 1:
+            time.sleep(1)
+            self.url=self.get_next_pages()
+            if self.url:
+                self.get_url_content(self.url)
+                self.get_user_content()
+            else:
+                break
+        self.get_email_address()
+        self.session.close()
+
+
+def make_name_mail(name_list):
+    name_str_items=[]
+    n=2
+    for item in name_list:
+        str_item=str(n)+'               '+'              '.join(item)
+        name_str_items.append(str_item)
+        n=n+1
+    return name_str_items
+
+def make_mail(name_list):
+    mail_str_items=[]
+    for item in name_list:
+        mail_str_items.append(item[1])
+    return mail_str_items
+
+def writemails(mail_content,filename,chongfucishu):
+   with open(filename,'w',encoding='utf-8') as txt_file:
+       txt_file.writelines('\n'.join(mail_content))
+       txt_file.write("\n重复位置"+chongfucishu)
+
+
+if __name__=="__main__":
+    # #print("fuck\n"*10)
+    url = "http://forums.threebodytech.com/viewtopic.php?f=14&t=79"
+    p = Collect_Email(url)
+    p.get_all()
+    writemails(make_name_mail(p.namelist), "win_name_email_events.txt",p.chongfucishu)
+
+
+
+
+
+
+
+
+
+
+
+

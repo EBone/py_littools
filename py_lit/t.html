@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Inactive users</title>
+
+<link href="style/admin.css?assets_version=12" rel="stylesheet" type="text/css" media="screen" />
+
+<script type="text/javascript">
+// <![CDATA[
+var jump_page = 'Enter the page number you wish to go to:';
+var on_page = '1';
+var per_page = '25';
+var base_url = '.\x2F..\x2Fadm\x2Findex.php\x3Fi\x3Dacp_inactive\x26amp\x3Bsid\x3D359cd72492ab13796833339436429c1b\x26amp\x3Bmode\x3Dlist\x26amp\x3Bst\x3D0\x26amp\x3Bsk\x3Di\x26amp\x3Bsd\x3Dd\x26amp\x3Busers_per_page\x3D25';
+
+/**
+* Jump to page
+*/
+function jumpto()
+{
+	var page = prompt(jump_page, on_page);
+
+	if (page !== null && !isNaN(page) && page == Math.floor(page) && page > 0)
+	{
+		if (base_url.indexOf('?') == -1)
+		{
+			document.location.href = base_url + '?start=' + ((page - 1) * per_page);
+		}
+		else
+		{
+			document.location.href = base_url.replace(/&amp;/g, '&') + '&start=' + ((page - 1) * per_page);
+		}
+	}
+}
+
+/**
+* Mark/unmark checkboxes
+* id = ID of parent container, name = name prefix, state = state [true/false]
+*/
+function marklist(id, name, state)
+{
+	var parent = document.getElementById(id) || document[id];
+
+	if (!parent)
+	{
+		return;
+	}
+
+	var rb = parent.getElementsByTagName('input');
+	
+	for (var r = 0; r < rb.length; r++)
+	{
+		if (rb[r].name.substr(0, name.length) == name)
+		{
+			rb[r].checked = state;
+		}
+	}
+}
+
+/**
+* Find a member
+*/
+function find_username(url)
+{
+	popup(url, 760, 570, '_usersearch');
+	return false;
+}
+
+/**
+* Window popup
+*/
+function popup(url, width, height, name)
+{
+	if (!name)
+	{
+		name = '_popup';
+	}
+
+	window.open(url.replace(/&amp;/g, '&'), name, 'height=' + height + ',resizable=yes,scrollbars=yes, width=' + width);
+	return false;
+}
+
+// ]]>
+</script>
+
+
+
+
+
+</head>
+
+<body class="ltr  nojs">
+
+
+<div id="wrap">
+	<div id="page-header">
+		<h1>Administration Control Panel</h1>
+		<p><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b">Admin index</a> &bull; <a href="./../index.php?sid=359cd72492ab13796833339436429c1b">Board index</a></p>
+		<p id="skip"><a href="#acp">Skip to content</a></p>
+	</div>
+	
+	<div id="page-body">
+		<div id="tabs">
+			<ul>
+							<li class="tab"><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=1">General</a></li>
+							<li class="tab"><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=6">Forums</a></li>
+							<li class="tab"><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=9">Posting</a></li>
+							<li class="tab activetab"><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=12">Users and Groups</a></li>
+							<li class="tab"><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=16">Permissions</a></li>
+							<li class="tab"><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=21">Customize</a></li>
+							<li class="tab"><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=25">Maintenance</a></li>
+							<li class="tab"><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=28">System</a></li>
+						</ul>
+		</div>
+
+		<div id="acp">
+				<div id="content">
+					<div id="menu">
+						<p>You are logged in as:<br /><strong>admin</strong> [&nbsp;<a href="./../ucp.php?mode=logout&amp;sid=359cd72492ab13796833339436429c1b">Logout</a>&nbsp;][&nbsp;<a href="./../adm/index.php?action=admlogout&amp;sid=359cd72492ab13796833339436429c1b">ACP&nbsp;Logout</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+																																																											
+																											<div class="menu-block">
+								<a class="header" href="javascript:void(0);">Users</a>
+								<ul>
+															
+															<li id="activemenu"><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_inactive&amp;mode=list"><span>Inactive users</span></a></li>
+																							<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_users&amp;icat=12&amp;mode=overview"><span>Manage users</span></a></li>
+																							<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_permissions&amp;mode=setting_user_global"><span>User permissions</span></a></li>
+																							<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_permissions&amp;icat=12&amp;mode=setting_user_local"><span>User forum permissions</span></a></li>
+																							<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_profile&amp;mode=profile"><span>Custom profile fields</span></a></li>
+																							<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_prune&amp;mode=users"><span>Prune users</span></a></li>
+																							<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_ranks&amp;mode=ranks"><span>Manage ranks</span></a></li>
+																																			</ul></div>							<div class="menu-block">
+								<a class="header" href="javascript:void(0);">Groups</a>
+								<ul>
+															
+															<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_groups&amp;icat=12&amp;mode=manage"><span>Manage groups</span></a></li>
+																							<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_groups&amp;mode=position"><span>Manage group positions</span></a></li>
+																							<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_permissions&amp;mode=setting_group_global"><span>Group permissions</span></a></li>
+																							<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_permissions&amp;icat=12&amp;mode=setting_group_local"><span>Group forum permissions</span></a></li>
+																																			</ul></div>							<div class="menu-block">
+								<a class="header" href="javascript:void(0);">User security</a>
+								<ul>
+															
+															<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_ban&amp;mode=email"><span>Ban emails</span></a></li>
+																							<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_ban&amp;mode=ip"><span>Ban IPs</span></a></li>
+																							<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_ban&amp;mode=user"><span>Ban users</span></a></li>
+																							<li><a href="./../adm/index.php?sid=359cd72492ab13796833339436429c1b&amp;i=acp_disallow&amp;mode=usernames"><span>Disallow usernames</span></a></li>
+																											
+																																																																															</ul>
+							</div>
+											</div>
+	
+					<div id="main">
+						<div class="main">
+
+<a id="maincontent"></a>
+
+<h1>Inactive users</h1>
+
+<p>This is a list of users who have registered but whose accounts are inactive. You can activate, delete or remind (by sending an email) these users if you wish.</p>
+
+<form id="inactive" method="post" action="./../adm/index.php?i=acp_inactive&amp;sid=359cd72492ab13796833339436429c1b&amp;mode=list&amp;st=0&amp;sk=i&amp;sd=d&amp;users_per_page=25&amp;start=0">
+
+
+<table class="table1 zebra-table">
+<thead>
+<tr>
+	<th>Username</th>
+	<th>Email</th>
+	<th>Joined</th>
+	<th>Inactive date</th>
+	<th>Last visit</th>
+	<th>Reason</th>
+	<th>Mark</th>
+</tr>
+</thead>
+<tbody>
+	<tr>
+		<td style="vertical-align: top;">
+			<a href="./../adm/index.php?i=users&amp;mode=overview&amp;redirect=acp_inactive&amp;sid=359cd72492ab13796833339436429c1b&amp;u=2721" class="username">dhc1690</a>
+					</td>
+		<td style="vertical-align: top;">theshaft0701@gmail.com</td>
+		<td style="vertical-align: top;">Sun Nov 26, 2017 1:29 pm</td>
+		<td style="vertical-align: top;">Sun Nov 26, 2017 1:29 pm</td>
+		<td style="vertical-align: top;"> - </td>
+		<td style="vertical-align: top;">
+			Newly registered account
+					</td>
+		<td>&nbsp;<input type="checkbox" class="radio" name="mark[]" value="2721" />&nbsp;</td>
+	</tr>
+	<tr>
+		<td style="vertical-align: top;">
+			<a href="./../adm/index.php?i=users&amp;mode=overview&amp;redirect=acp_inactive&amp;sid=359cd72492ab13796833339436429c1b&amp;u=2688" class="username">stdstad</a>
+					</td>
+		<td style="vertical-align: top;">stdstad@yahoo.co.jp</td>
+		<td style="vertical-align: top;">Fri Nov 24, 2017 4:44 am</td>
+		<td style="vertical-align: top;">Fri Nov 24, 2017 4:44 am</td>
+		<td style="vertical-align: top;"> - </td>
+		<td style="vertical-align: top;">
+			Newly registered account
+					</td>
+		<td>&nbsp;<input type="checkbox" class="radio" name="mark[]" value="2688" />&nbsp;</td>
+	</tr>
+	<tr>
+		<td style="vertical-align: top;">
+			<a href="./../adm/index.php?i=users&amp;mode=overview&amp;redirect=acp_inactive&amp;sid=359cd72492ab13796833339436429c1b&amp;u=2681" class="username">dnjmktdnjmkt</a>
+					</td>
+		<td style="vertical-align: top;">djmt@hotmail.co.jp</td>
+		<td style="vertical-align: top;">Fri Nov 24, 2017 12:27 am</td>
+		<td style="vertical-align: top;">Fri Nov 24, 2017 12:27 am</td>
+		<td style="vertical-align: top;"> - </td>
+		<td style="vertical-align: top;">
+			Newly registered account
+					</td>
+		<td>&nbsp;<input type="checkbox" class="radio" name="mark[]" value="2681" />&nbsp;</td>
+	</tr>
+	<tr>
+		<td style="vertical-align: top;">
+			<a href="./../adm/index.php?i=users&amp;mode=overview&amp;redirect=acp_inactive&amp;sid=359cd72492ab13796833339436429c1b&amp;u=2667" class="username">Brem</a>
+					</td>
+		<td style="vertical-align: top;">bremdogz@yahoo.com</td>
+		<td style="vertical-align: top;">Wed Nov 22, 2017 6:00 pm</td>
+		<td style="vertical-align: top;">Wed Nov 22, 2017 6:00 pm</td>
+		<td style="vertical-align: top;"> - </td>
+		<td style="vertical-align: top;">
+			Newly registered account
+					</td>
+		<td>&nbsp;<input type="checkbox" class="radio" name="mark[]" value="2667" />&nbsp;</td>
+	</tr>
+	<tr>
+		<td style="vertical-align: top;">
+			<a href="./../adm/index.php?i=users&amp;mode=overview&amp;redirect=acp_inactive&amp;sid=359cd72492ab13796833339436429c1b&amp;u=2498" class="username">supalova91</a>
+					</td>
+		<td style="vertical-align: top;">supalova91@yahoo.fr</td>
+		<td style="vertical-align: top;">Wed Aug 16, 2017 5:37 pm</td>
+		<td style="vertical-align: top;">Wed Aug 16, 2017 5:37 pm</td>
+		<td style="vertical-align: top;"> - </td>
+		<td style="vertical-align: top;">
+			Newly registered account
+					</td>
+		<td>&nbsp;<input type="checkbox" class="radio" name="mark[]" value="2498" />&nbsp;</td>
+	</tr>
+</tbody>
+</table>
+
+<fieldset class="display-options">
+	Display entries from previous: &nbsp;<select name="st" id="st"><option value="0" selected="selected">All entries</option><option value="1">1 day</option><option value="7">7 days</option><option value="14">2 weeks</option><option value="30">1 month</option><option value="90">3 months</option><option value="180">6 months</option><option value="365">1 year</option></select>&nbsp;Sort by: <select name="sk" id="sk"><option value="i" selected="selected">Inactive date</option><option value="j">Registration date</option><option value="l">Last visit</option><option value="d">Last reminded</option><option value="r">Reason</option><option value="u">Username</option><option value="p">Posts</option><option value="e">Reminder sent</option></select> <select name="sd" id="sd"><option value="a">Ascending</option><option value="d" selected="selected">Descending</option></select>	<input class="button2" type="submit" value="Go" name="sort" />
+</fieldset>
+
+<hr />
+
+
+<fieldset class="quick">
+	<select name="action"><option value="activate">Activate</option><option value="delete">Delete</option><option value="remind">Remind</option></select>
+	<input class="button2" type="submit" name="submit" value="Submit" />
+	<p class="small"><a href="#" onclick="marklist('inactive', 'mark', true); return false;">Mark all</a> &bull; <a href="#" onclick="marklist('inactive', 'mark', false); return false;">Unmark all</a></p>
+	<input type="hidden" name="creation_time" value="1511928414" />
+<input type="hidden" name="form_token" value="66b49701495d3376c5b0bee917f6dd413d5b4bdf" />
+
+</fieldset>
+
+</form>
+
+						</div>
+					</div><!-- /#main -->
+				</div>
+		</div><!-- /#acp -->
+	</div>
+
+	<div id="page-footer">
+		<div class="copyright">
+							Powered by <a href="https://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Limited
+				<br /><a href="https://www.phpbb.com/customise/db/translation/american_english/">American English Language Pack</a> &copy; <a href="https://www.maelsoucaze.com/">Maël Soucaze</a>			
+					</div>
+
+		<div id="darkenwrapper" data-ajax-error-title="AJAX error" data-ajax-error-text="Something went wrong when processing your request." data-ajax-error-text-abort="User aborted request." data-ajax-error-text-timeout="Your request timed out; please try again." data-ajax-error-text-parsererror="Something went wrong with the request and the server returned an invalid reply.">
+			<div id="darken">&nbsp;</div>
+		</div>
+		<div id="loading_indicator"></div>
+
+		<div id="phpbb_alert" class="phpbb_alert" data-l-err="Error" data-l-timeout-processing-req="Request timed out.">
+			<a href="#" class="alert_close"></a>
+			<h3 class="alert_title"></h3><p class="alert_text"></p>
+		</div>
+		<div id="phpbb_confirm" class="phpbb_alert">
+			<a href="#" class="alert_close"></a>
+			<div class="alert_text"></div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="./../assets/javascript/jquery.min.js"></script>
+<script type="text/javascript" src="./../assets/javascript/core.js?assets_version=12"></script>
+
+<script type="text/javascript" src="./../adm/style/ajax.js?assets_version=12"></script>
+
+<script type="text/javascript" src="./../adm/style/admin.js?assets_version=12"></script>
+
+
+
+</body>
+</html>
