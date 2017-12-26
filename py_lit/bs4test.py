@@ -13,7 +13,7 @@ and they lived at the bottom of a well.</p>
 
 <p class="story">...</p>
 """
-bs.
+
 soup=bs(html_doc,"lxml")
 print(soup.prettify())
 
